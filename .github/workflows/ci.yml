@@ -4,6 +4,9 @@ on:
   workflow_call:
     inputs:
       # node versions to use, json array like in matrix.node-version
+      node-version:
+        description: 'Conccrete Node.js version to use'
+        type: string
       matrix-node-version:
         description: 'Node.js versions to use, json array like in matrix.node-version'
         required: true
@@ -39,68 +42,12 @@ on:
         description: 'SonarQube token'
         required: false
 
-# cancel in-progress runs on new commits to same PR (gitub.event.number)
-concurrency:
-  # group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read # to fetch code (actions/checkout)
 
 jobs:
   check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: kt-actions/npm-run-script@v1
-        with:
-          matrix-node-version: ${{ inputs.matrix-node-version }}
-          install-script: npm ci
-          run-script: ${{ inputs.check-script }}
-
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ${{ fromJson(inputs.matrix-node-version) }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: kt-actions/npm-run-script@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-          install-script: npm ci
-          run-script: ${{ inputs.test-script }}
-
-  codeql:
-    if: inputs.run-codeql == 'true'
-    uses: ./.github/workflows/codeql.yml
-    # secrets: inherit
-    permissions:
-      # required for all workflows
-      security-events: write
-      # required to fetch internal or private CodeQL packs
-      packages: read
-      # only required for workflows in private repositories
-      actions: read
-      contents: read
-
-  sonar:
-    if: inputs.run-sonar == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: kt-actions/npm-run-script@v1
-        with:
-          matrix-node-version: ${{ inputs.matrix-node-version }}
-          install-script: npm ci
-          run-script: ${{ inputs.sonar-script }}
-
-      - uses: sonarsource/sonarqube-scan-action@v5
-        env:
-          SONAR_TOKEN: ${{ secrets.sonar-token }}
+    uses: ./.github/workflows/ci-check.yml@v1
+    with:
+      node-version: ${{ inputs.node-version }}
+      matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
