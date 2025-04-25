@@ -30,7 +30,7 @@ on:
           npm run build
           npm run coverage
     secrets:
-      sonar-token:
+      SONAR_TOKEN:
         description: 'SonarQube token'
         required: false
 
@@ -74,7 +74,7 @@ jobs:
       # Check if sonar-token is set
       - id: sonar-token
         run: |
-          if [[ -z "${{ secrets.sonar-token }}" ]]; then
+          if [[ -z "${{ secrets.SONAR_TOKEN }}" ]]; then
             echo "sonar-token is not set"
             echo "result=false" >> "$GITHUB_OUTPUT"
           else
@@ -95,4 +95,4 @@ jobs:
       - uses: sonarsource/sonarqube-scan-action@v5
         if: ${{ steps.sonar-token.outputs.result == 'true' }}
         env:
-          SONAR_TOKEN: ${{ secrets.sonar-token }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
