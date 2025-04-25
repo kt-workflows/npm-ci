@@ -17,12 +17,12 @@ on:
       install-script:
         description: 'Install script to run'
         type: string
-        default: npm ci
+        default: npm cixxx
       check-script:
         description: 'Check script to run'
         type: string
         default: |
-          npm run check
+          npm run checkxxx
           npm run lint
       test-script:
         description: 'Test script to run'
