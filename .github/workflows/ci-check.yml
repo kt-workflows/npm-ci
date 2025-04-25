@@ -36,4 +36,4 @@ jobs:
           matrix-node-version: ${{ inputs.matrix-node-version }}
           matrix-node-version-earliest: ${{ inputs.matrix-node-version-earliest }}
           install-script: npm ci
-          run-script: ${{ inputs.check-script }}
+          run-script: ${{ inputs.script }}
