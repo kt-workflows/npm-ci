@@ -1,4 +1,4 @@
-name: CI-check
+name: CI-test
 
 on:
   workflow_call:
@@ -14,8 +14,8 @@ on:
         description: 'Check script to run'
         type: string
         default: |
-          npm run check
-          npm run lint
+          npm run build
+          npm run test
 
 permissions:
   contents: read # to fetch code (actions/checkout)
@@ -26,13 +26,16 @@ jobs:
   #   steps:
   #     - run: ${{ tojson(inputs) }}
   #       shell: cat {0}
-  check:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ${{ fromJson(inputs.matrix-node-version) }}
     steps:
       - uses: actions/checkout@v4
 
       - uses: kt-actions/npm-run-script@v1
         with:
-          matrix-node-version: ${{ inputs.matrix-node-version }}
+          node-version: ${{ matrix.node-version }}
           install-script: ${{ inputs.install-script }}
           run-script: ${{ inputs.run-script }}

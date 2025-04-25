@@ -4,16 +4,9 @@ on:
   workflow_call:
     inputs:
       # node versions to use, json array like in matrix.node-version
-      node-version:
-        description: 'Conccrete Node.js version to use'
-        type: string
       matrix-node-version:
         description: 'Node.js versions to use, json array like in matrix.node-version'
         type: string
-      matrix-node-version-earliest:
-        description: 'If earliest Node.js version should be used from matrix-node-version'
-        type: boolean
-        default: false
       install-script:
         description: 'Install script to run'
         type: string
@@ -29,7 +22,7 @@ on:
         type: string
         default: |
           npm run build
-          npm test
+          npm run test
       run-sonar:
         description: 'Run SonarQube analysis'
         type: boolean
@@ -57,8 +50,13 @@ jobs:
   ci-check:
     uses: kt-workflows/npm-ci/.github/workflows/ci-check.yml@v1
     with:
-      node-version: ${{ inputs.node-version }}
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
-      matrix-node-version-earliest: ${{ inputs.matrix-node-version-earliest }}
       install-script: ${{ inputs.install-script }}
       run-script: ${{ inputs.check-script }}
+
+  ci-test:
+    uses: kt-workflows/npm-ci/.github/workflows/ci-test.yml@v1
+    with:
+      matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
+      install-script: ${{ inputs.install-script }}
+      run-script: ${{ inputs.test-script }}
