@@ -74,7 +74,7 @@ jobs:
           fi
   ci-sonar:
     needs: do-ci-sonar
-    if: ${{ steps.sonar-token.outputs.result == 'true' }}
+    if: ${{ needs.do-ci-sonar.outputs.result == 'true' }}
     uses: kt-workflows/npm-ci/.github/workflows/ci-sonar.yml@v1
     with:
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
