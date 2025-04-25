@@ -42,7 +42,7 @@ permissions:
 
 jobs:
   check:
-    uses: ./.github/workflows/ci-check.yml
+    uses: kt-workflows/npm-ci/.github/workflows/ci-check.yml@v1
     with:
       node-version: ${{ inputs.node-version }}
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
