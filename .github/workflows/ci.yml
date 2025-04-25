@@ -10,6 +10,10 @@ on:
       matrix-node-version:
         description: 'Node.js versions to use, json array like in matrix.node-version'
         type: string
+      matrix-node-version-earliest:
+        description: 'If earliest Node.js version should be used from matrix-node-version'
+        type: boolean
+        default: false
       check-script:
         description: 'Check script to run'
         type: string
@@ -41,7 +45,7 @@ permissions:
   contents: read # to fetch code (actions/checkout)
 
 jobs:
-  check:
+  ci-check:
     uses: kt-workflows/npm-ci/.github/workflows/ci-check.yml@v1
     with:
       node-version: ${{ inputs.node-version }}

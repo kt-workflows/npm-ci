@@ -9,6 +9,10 @@ on:
       matrix-node-version:
         description: 'Node.js versions to use, json array like in matrix.node-version'
         type: string
+      matrix-node-version-earliest:
+        description: 'If earliest Node.js version should be used from matrix-node-version'
+        type: boolean
+        default: false
       check-script:
         description: 'Check script to run'
         type: string
@@ -27,6 +31,8 @@ jobs:
 
       - uses: kt-actions/npm-run-script@v1
         with:
+          node-version: ${{ inputs.node-version }}
           matrix-node-version: ${{ inputs.matrix-node-version }}
+          matrix-node-version-earliest: ${{ inputs.matrix-node-version-earliest }}
           install-script: npm ci
           run-script: ${{ inputs.check-script }}
