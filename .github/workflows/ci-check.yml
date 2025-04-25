@@ -16,7 +16,7 @@ on:
       install-script:
         description: 'Install script to run'
         type: string
-        default: npm cixx
+        default: npm ci
       run-script:
         description: 'Check script to run'
         type: string
@@ -28,11 +28,11 @@ permissions:
   contents: read # to fetch code (actions/checkout)
 
 jobs:
-  echo-inputs:
-    runs-on: ubuntu-latest
-    steps:
-      - run: ${{ tojson(inputs) }}
-        shell: cat {0}
+  # echo-inputs:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: ${{ tojson(inputs) }}
+  #       shell: cat {0}
   check:
     runs-on: ubuntu-latest
     steps:
