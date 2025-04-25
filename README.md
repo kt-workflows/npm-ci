@@ -1,2 +1,3 @@
 # npm-ci
-NPM CI Workflow
+
+NPM module CI Workflow
