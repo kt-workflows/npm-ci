@@ -24,11 +24,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Check if step fails if one script line fails
-      - run: |
-          ls ./zzzz
-          ls .
-
       - uses: kt-actions/npm-run-script@v1
         with:
           matrix-node-version: ${{ inputs.matrix-node-version }}
