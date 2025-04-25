@@ -29,6 +29,13 @@ on:
         default: |
           npm run build
           npm run coverage
+      cache-additional-path:
+        description: 'Additional paths to cache. This is a multi-line list of paths.'
+        type: string
+      cache-delete:
+        description: 'Delete the cache if it exists to cache the new one.'
+        type: boolean
+        default: false
     secrets:
       SONAR_TOKEN:
         description: 'SonarQube token'
@@ -53,6 +60,8 @@ jobs:
           matrix-node-version: ${{ inputs.matrix-node-version }}
           install-script: ${{ inputs.install-script }}
           run-script: ${{ inputs.check-script }}
+          cache-additional-path: ${{ inputs.cache-additional-path }}
+          cache-delete: ${{ inputs.cache-delete }}
 
   test:
     runs-on: ubuntu-latest
@@ -67,6 +76,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           install-script: ${{ inputs.install-script }}
           run-script: ${{ inputs.test-script }}
+          cache-additional-path: ${{ inputs.cache-additional-path }}
+          cache-delete: ${{ inputs.cache-delete }}
 
   sonar:
     runs-on: ubuntu-latest
@@ -91,6 +102,8 @@ jobs:
           matrix-node-version: ${{ inputs.matrix-node-version }}
           install-script: ${{ inputs.install-script }}
           run-script: ${{ inputs.sonar-script }}
+          cache-additional-path: ${{ inputs.cache-additional-path }}
+          cache-delete: ${{ inputs.cache-delete }}
 
       - uses: sonarsource/sonarqube-scan-action@v5
         if: ${{ steps.sonar-token.outputs.result == 'true' }}
