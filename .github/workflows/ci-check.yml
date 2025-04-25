@@ -4,9 +4,11 @@ on:
   workflow_call:
     inputs:
       # node versions to use, json array like in matrix.node-version
+      node-version:
+        description: 'Conccrete Node.js version to use'
+        type: string
       matrix-node-version:
         description: 'Node.js versions to use, json array like in matrix.node-version'
-        required: true
         type: string
       check-script:
         description: 'Check script to run'
