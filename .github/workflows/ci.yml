@@ -22,10 +22,6 @@ on:
         default: |
           npm run build
           npm test
-      run-codeql:
-        description: 'Run CodeQL analysis using ./.github/workflows/codeql.yml in your repo'
-        type: boolean
-        default: false
       run-sonar:
         description: 'Run SonarQube analysis'
         type: boolean
