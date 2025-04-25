@@ -13,10 +13,11 @@ on:
         description: 'If earliest Node.js version should be used from matrix-node-version'
         type: boolean
         default: false
-      check-script:
+      script:
         description: 'Check script to run'
         type: string
         default: |
+          ls ./xxxx
           npm run check
           npm run lint
 

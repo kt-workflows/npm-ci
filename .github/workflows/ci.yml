@@ -18,7 +18,6 @@ on:
         description: 'Check script to run'
         type: string
         default: |
-          ls ./xxx
           npm run check
           npm run lint
       test-script:
