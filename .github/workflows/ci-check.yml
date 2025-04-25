@@ -44,4 +44,4 @@ jobs:
           matrix-node-version: ${{ inputs.matrix-node-version }}
           matrix-node-version-earliest: ${{ inputs.matrix-node-version-earliest }}
           install-script: ${{ inputs.install-script }}
-          run-script: ${{ inputs.script }}
+          run-script: ${{ inputs.run-script }}
