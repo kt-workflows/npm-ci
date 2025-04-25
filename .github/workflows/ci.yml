@@ -23,10 +23,6 @@ on:
         default: |
           npm run build
           npm run test
-      run-sonar:
-        description: 'Run SonarQube analysis'
-        type: boolean
-        default: false
       sonar-script:
         description: 'SonarQube script to run'
         type: string
@@ -62,7 +58,7 @@ jobs:
       run-script: ${{ inputs.test-script }}
 
   ci-sonar:
-    if: ${{ inputs.run-sonar == 'true' }}
+    if: ${{ secrets.sonar-token != '' }}
     uses: kt-workflows/npm-ci/.github/workflows/ci-sonar.yml@v1
     with:
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
