@@ -52,6 +52,7 @@ jobs:
   #     - run: ${{ tojson(inputs) }}
   #       shell: cat {0}
   check:
+    if: ${{ inputs.check-script != '' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -65,6 +66,7 @@ jobs:
           cache-delete: ${{ inputs.cache-delete }}
 
   test:
+    if: ${{ inputs.test-script != '' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -98,7 +100,7 @@ jobs:
         if: ${{ steps.sonar-token.outputs.result == 'true' }}
 
       - uses: kt-actions/npm-run-script@v1
-        if: ${{ steps.sonar-token.outputs.result == 'true' }}
+        if: ${{ steps.sonar-token.outputs.result == 'true' }} && ${{ inputs.sonar-script != '' }}
         with:
           matrix-node-version: ${{ inputs.matrix-node-version }}
           install-script: ${{ inputs.install-script }}
