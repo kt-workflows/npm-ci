@@ -60,3 +60,13 @@ jobs:
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
       install-script: ${{ inputs.install-script }}
       run-script: ${{ inputs.test-script }}
+
+  ci-sonar:
+    if: ${{ inputs.run-sonar == 'true' }}
+    uses: kt-workflows/npm-ci/.github/workflows/ci-sonar.yml@v1
+    with:
+      matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
+      install-script: ${{ inputs.install-script }}
+      run-script: ${{ inputs.sonar-script }}
+    secrets:
+      sonar-token: ${{ secrets.sonar-token }}

@@ -1,4 +1,4 @@
-name: CI-test
+name: CI-sonar
 
 on:
   workflow_call:
@@ -11,11 +11,15 @@ on:
         type: string
         default: npm ci
       run-script:
-        description: 'Script to run'
+        description: 'Script to run before the sonar action'
         type: string
         default: |
           npm run build
-          npm run test
+          npm run coverage
+    secrets:
+      sonar-token:
+        description: 'SonarQube token'
+        required: false
 
 permissions:
   contents: read # to fetch code (actions/checkout)
@@ -26,16 +30,17 @@ jobs:
   #   steps:
   #     - run: ${{ tojson(inputs) }}
   #       shell: cat {0}
-  test:
+  sonar:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ${{ fromJson(inputs.matrix-node-version) }}
     steps:
       - uses: actions/checkout@v4
 
       - uses: kt-actions/npm-run-script@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          matrix-node-version: ${{ inputs.matrix-node-version }}
           install-script: ${{ inputs.install-script }}
           run-script: ${{ inputs.run-script }}
+
+      - uses: sonarsource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.sonar-token }}
