@@ -49,24 +49,11 @@ permissions:
   contents: read # to fetch code (actions/checkout)
 
 jobs:
-  echo-inputs:
-    runs-on: ubuntu-latest
-    steps:
-      - run: ${{ tojson(inputs) }}
-        shell: cat {0}
-  echo:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Echo inputs
-        run: |
-          echo "node-version: ${{ inputs.node-version }}"
-          echo "matrix-node-version: ${{ inputs.matrix-node-version }}"
-          echo "matrix-node-version-earliest: ${{ inputs.matrix-node-version-earliest }}"
-          echo "install-script: ${{ inputs.install-script }}"
-          echo "check-script: ${{ inputs.check-script }}"
-          echo "test-script: ${{ inputs.test-script }}"
-          echo "run-sonar: ${{ inputs.run-sonar }}"
-          echo "sonar-script: ${{ inputs.sonar-script }}"
+  # echo-inputs:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: ${{ tojson(inputs) }}
+  #       shell: cat {0}
   ci-check:
     uses: kt-workflows/npm-ci/.github/workflows/ci-check.yml@v1
     with:

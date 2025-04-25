@@ -28,6 +28,11 @@ permissions:
   contents: read # to fetch code (actions/checkout)
 
 jobs:
+  echo-inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ${{ tojson(inputs) }}
+        shell: cat {0}
   check:
     runs-on: ubuntu-latest
     steps:
