@@ -43,6 +43,7 @@ on:
 
 permissions:
   contents: read # to fetch code (actions/checkout)
+  actions: write # to cache (actions/cache)
 
 jobs:
   # echo-inputs:
