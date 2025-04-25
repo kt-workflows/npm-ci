@@ -13,7 +13,11 @@ on:
         description: 'If earliest Node.js version should be used from matrix-node-version'
         type: boolean
         default: false
-      script:
+      install-script:
+        description: 'Install script to run'
+        type: string
+        default: npm ci
+      run-script:
         description: 'Check script to run'
         type: string
         default: |
@@ -34,5 +38,5 @@ jobs:
           node-version: ${{ inputs.node-version }}
           matrix-node-version: ${{ inputs.matrix-node-version }}
           matrix-node-version-earliest: ${{ inputs.matrix-node-version-earliest }}
-          install-script: npm ci
+          install-script: ${{ inputs.install-script }}
           run-script: ${{ inputs.script }}
