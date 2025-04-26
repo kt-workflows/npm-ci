@@ -84,6 +84,8 @@ jobs:
 
   do-sonar:
     runs-on: ubuntu-latest
+    outputs:
+      result: ${{ steps.sonar-token.outputs.result }}
     steps:
       # Check if sonar-token is set
       - id: sonar-token
@@ -98,7 +100,7 @@ jobs:
 
   sonar:
     needs: [do-sonar]
-    if: ${{ needs.do-sonar.sonar-token.outputs.result == 'true' }}
+    if: ${{ needs.do-sonar.outputs.result == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
