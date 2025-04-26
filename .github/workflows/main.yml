@@ -36,6 +36,10 @@ on:
         description: 'Delete the cache if it exists to cache the new one.'
         type: boolean
         default: false
+      working-directory:
+        description: 'Working directory to run the workflow in'
+        type: string
+        default: '.'
     secrets:
       SONAR_TOKEN:
         description: 'SonarQube token'
@@ -64,6 +68,7 @@ jobs:
           run-script: ${{ inputs.check-script }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
           cache-reset: ${{ inputs.cache-reset }}
+          working-directory: ${{ inputs.working-directory }}
 
   test:
     if: ${{ inputs.test-script != '' }}
@@ -81,6 +86,7 @@ jobs:
           run-script: ${{ inputs.test-script }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
           cache-reset: ${{ inputs.cache-reset }}
+          working-directory: ${{ inputs.working-directory }}
 
   do-sonar:
     runs-on: ubuntu-latest
@@ -113,6 +119,7 @@ jobs:
           run-script: ${{ inputs.sonar-script }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
           cache-reset: ${{ inputs.cache-reset }}
+          working-directory: ${{ inputs.working-directory }}
 
       - uses: sonarsource/sonarqube-scan-action@v5
         env:
