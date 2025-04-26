@@ -54,8 +54,10 @@ jobs:
   cache-reset:
     runs-on: ubuntu-latest
     steps:
+      - run: echo "cache-reset = ${{ inputs.cache-reset }}"
       - uses: kt-actions/npm-run-script-cache-delete@v1
         if: ${{ inputs.cache-reset == 'true' }}
+
   check:
     needs: cache-reset
     if: ${{ inputs.check-script != '' }}
@@ -69,7 +71,6 @@ jobs:
           install-script: ${{ inputs.install-script }}
           run-script: ${{ inputs.check-script }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
-          cache-reset: ${{ inputs.cache-reset }}
 
   test:
     needs: cache-reset
