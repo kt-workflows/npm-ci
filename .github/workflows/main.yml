@@ -51,27 +51,6 @@ jobs:
   #   steps:
   #     - run: ${{ tojson(inputs) }}
   #       shell: cat {0}
-  cache-reset:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ${{ fromJson(inputs.matrix-node-version) }}
-    steps:
-      - uses: actions/checkout@v4
-        if: ${{ inputs.cache-reset || inputs.cache-reset == 'true' }}
-
-      - id: setup-node
-        if: ${{ inputs.cache-reset || inputs.cache-reset == 'true' }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
-      - uses: kt-actions/npm-run-script-cache-delete@v1
-        if: ${{ inputs.cache-reset || inputs.cache-reset == 'true' }}
-        with:
-          node-version: ${{ steps.setup-node.outputs.node-version }}
-
   check:
     needs: cache-reset
     if: ${{ inputs.check-script != '' }}
@@ -85,6 +64,7 @@ jobs:
           install-script: ${{ inputs.install-script }}
           run-script: ${{ inputs.check-script }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
+          cache-reset: ${{ inputs.cache-reset }}
 
   test:
     needs: cache-reset
@@ -102,6 +82,7 @@ jobs:
           install-script: ${{ inputs.install-script }}
           run-script: ${{ inputs.test-script }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
+          cache-reset: ${{ inputs.cache-reset }}
 
   do-sonar:
     needs: cache-reset
@@ -132,6 +113,7 @@ jobs:
           install-script: ${{ inputs.install-script }}
           run-script: ${{ inputs.sonar-script }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
+          cache-reset: ${{ inputs.cache-reset }}
 
       - uses: sonarsource/sonarqube-scan-action@v5
         env:
