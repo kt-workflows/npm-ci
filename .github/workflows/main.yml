@@ -92,6 +92,7 @@ jobs:
     needs: cache-reset
     runs-on: ubuntu-latest
     steps:
+      # Check if sonar-token is set
       - id: sonar-token
         run: |
           if [[ -z "${{ secrets.SONAR_TOKEN }}" ]]; then
@@ -104,20 +105,9 @@ jobs:
 
   sonar:
     needs: [cache-reset, do-sonar]
-    if: ${{ steps.sonar-token.outputs.result == 'true' }}
+    if: ${{ needs.do-sonar.sonar-token.outputs.result == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      # Check if sonar-token is set
-      - id: sonar-token
-        run: |
-          if [[ -z "${{ secrets.SONAR_TOKEN }}" ]]; then
-            echo "sonar-token is not set"
-            echo "result=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "sonar-token is set"
-            echo "result=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - uses: actions/checkout@v4
 
       - uses: kt-actions/npm-run-script@v1
