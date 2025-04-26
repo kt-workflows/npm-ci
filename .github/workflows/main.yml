@@ -53,10 +53,15 @@ jobs:
   #       shell: cat {0}
   cache-reset:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ${{ fromJson(inputs.matrix-node-version) }}
     steps:
       - uses: actions/checkout@v4
 
       - uses: kt-actions/npm-run-script-cache-delete@v1
+        with:
+          node-version: ${{ matrix.node-version }}
         if: ${{ inputs.cache-reset || inputs.cache-reset == 'true' }}
 
   check:
