@@ -52,7 +52,6 @@ jobs:
   #     - run: ${{ tojson(inputs) }}
   #       shell: cat {0}
   check:
-    needs: cache-reset
     if: ${{ inputs.check-script != '' }}
     runs-on: ubuntu-latest
     steps:
@@ -67,7 +66,6 @@ jobs:
           cache-reset: ${{ inputs.cache-reset }}
 
   test:
-    needs: cache-reset
     if: ${{ inputs.test-script != '' }}
     runs-on: ubuntu-latest
     strategy:
@@ -85,7 +83,6 @@ jobs:
           cache-reset: ${{ inputs.cache-reset }}
 
   do-sonar:
-    needs: cache-reset
     runs-on: ubuntu-latest
     steps:
       # Check if sonar-token is set
@@ -100,7 +97,7 @@ jobs:
           fi
 
   sonar:
-    needs: [cache-reset, do-sonar]
+    needs: [do-sonar]
     if: ${{ needs.do-sonar.sonar-token.outputs.result == 'true' }}
     runs-on: ubuntu-latest
     steps:
