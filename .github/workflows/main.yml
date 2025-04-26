@@ -55,6 +55,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "cache-reset = ${{ inputs.cache-reset }}"
+      - run: echo "will delete cache if true"
+        if: ${{ inputs.cache-reset == 'true' }}
+      - run: echo "won't delete cache if not true"
+        if: ${{ inputs.cache-reset != 'true' }}
       - uses: kt-actions/npm-run-script-cache-delete@v1
         if: ${{ inputs.cache-reset == 'true' }}
 
