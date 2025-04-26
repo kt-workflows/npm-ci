@@ -59,9 +59,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: kt-actions/npm-run-script-cache-delete@v1
+      - id: setup-node
+        uses: kt-actions/setup-node-minmax@v1
         with:
           node-version: ${{ matrix.node-version }}
+
+      - uses: kt-actions/npm-run-script-cache-delete@v1
+        with:
+          node-version: ${{ steps.setup-node.outputs.node-version }}
         if: ${{ inputs.cache-reset || inputs.cache-reset == 'true' }}
 
   check:
