@@ -30,9 +30,9 @@ on:
           npm run build
           npm run coverage
       cache-additional-path:
-        description: 'Additional paths to cache. This is a multi-line list of paths.'
+        description: 'Additional dependency paths to cache. This is a multi-line list of paths.'
         type: string
-      cache-delete:
+      cache-reset:
         description: 'Delete the cache if it exists to cache the new one.'
         type: boolean
         default: false
@@ -51,7 +51,13 @@ jobs:
   #   steps:
   #     - run: ${{ tojson(inputs) }}
   #       shell: cat {0}
+  cache-reset:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kt-actions/npm-run-script-cache-delete@v1
+        if: ${{ inputs.cache-reset == 'true' }}
   check:
+    needs: cache-reset
     if: ${{ inputs.check-script != '' }}
     runs-on: ubuntu-latest
     steps:
@@ -63,9 +69,10 @@ jobs:
           install-script: ${{ inputs.install-script }}
           run-script: ${{ inputs.check-script }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
-          cache-delete: ${{ inputs.cache-delete }}
+          cache-reset: ${{ inputs.cache-reset }}
 
   test:
+    needs: cache-reset
     if: ${{ inputs.test-script != '' }}
     runs-on: ubuntu-latest
     strategy:
@@ -80,9 +87,24 @@ jobs:
           install-script: ${{ inputs.install-script }}
           run-script: ${{ inputs.test-script }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
-          cache-delete: ${{ inputs.cache-delete }}
+
+  do-sonar:
+    needs: cache-reset
+    runs-on: ubuntu-latest
+    steps:
+      - id: sonar-token
+        run: |
+          if [[ -z "${{ secrets.SONAR_TOKEN }}" ]]; then
+            echo "sonar-token is not set"
+            echo "result=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "sonar-token is set"
+            echo "result=true" >> "$GITHUB_OUTPUT"
+          fi
 
   sonar:
+    needs: [cache-reset, do-sonar]
+    if: ${{ steps.sonar-token.outputs.result == 'true' }}
     runs-on: ubuntu-latest
     steps:
       # Check if sonar-token is set
@@ -97,18 +119,15 @@ jobs:
           fi
 
       - uses: actions/checkout@v4
-        if: ${{ steps.sonar-token.outputs.result == 'true' }}
 
       - uses: kt-actions/npm-run-script@v1
-        if: ${{ steps.sonar-token.outputs.result == 'true' }} && ${{ inputs.sonar-script != '' }}
+        if: ${{ inputs.sonar-script != '' }}
         with:
           matrix-node-version: ${{ inputs.matrix-node-version }}
           install-script: ${{ inputs.install-script }}
           run-script: ${{ inputs.sonar-script }}
           cache-additional-path: ${{ inputs.cache-additional-path }}
-          cache-delete: ${{ inputs.cache-delete }}
 
       - uses: sonarsource/sonarqube-scan-action@v5
-        if: ${{ steps.sonar-token.outputs.result == 'true' }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
