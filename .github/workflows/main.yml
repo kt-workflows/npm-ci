@@ -60,9 +60,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - id: setup-node
-        uses: kt-actions/setup-node-minmax@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
       - uses: kt-actions/npm-run-script-cache-delete@v1
         with:
