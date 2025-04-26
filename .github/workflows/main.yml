@@ -58,17 +58,19 @@ jobs:
         node-version: ${{ fromJson(inputs.matrix-node-version) }}
     steps:
       - uses: actions/checkout@v4
+        if: ${{ inputs.cache-reset || inputs.cache-reset == 'true' }}
 
       - id: setup-node
+        if: ${{ inputs.cache-reset || inputs.cache-reset == 'true' }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
       - uses: kt-actions/npm-run-script-cache-delete@v1
+        if: ${{ inputs.cache-reset || inputs.cache-reset == 'true' }}
         with:
           node-version: ${{ steps.setup-node.outputs.node-version }}
-        if: ${{ inputs.cache-reset || inputs.cache-reset == 'true' }}
 
   check:
     needs: cache-reset
